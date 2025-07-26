@@ -9,7 +9,7 @@ class Park(Environment):
         ##############################################################################
         #                            BEGIN OF YOUR CODE                              #
         ##############################################################################
-        super().list_things_at(agent.location)
+        return  super().list_things_at(agent.location)
         ##############################################################################
         #                             END OF YOUR CODE                               #
         ##############################################################################
@@ -23,12 +23,19 @@ class Park(Environment):
         ##############################################################################
         if action == "move down":
             print("BlindDog decided to move down at location: ", agent.location)
-            agent.move_down()
+            agent.movedown()
         elif action == "eat":
+            things = super().list_things_at(agent.location, Food)
             print("BlindDog ate Food at location: ", agent.location)
+            for thing in things:
+                super().delete_thing(thing)
+            agent.movedown()
         elif action == "drink":
+            things = super().list_things_at(agent.location, Water)
             print("BlindDog drank Water at location: ", agent.location)
-
+            for thing in things:
+                super().delete_thing(thing)
+            agent.movedown()
         ##############################################################################
         #                             END OF YOUR CODE                               #
         ##############################################################################
@@ -42,7 +49,9 @@ class Park(Environment):
         ##############################################################################
         #                            BEGIN OF YOUR CODE                              #
         ##############################################################################
-        pass
+        food_or_water = not any(isinstance(thing, Food) or isinstance(thing, Water) for thing in self.things)
+        alive_agents = not any(agent.is_alive() for agent in self.agents)
+        return food_or_water or alive_agents
         ##############################################################################
         #                             END OF YOUR CODE                               #
         ##############################################################################
